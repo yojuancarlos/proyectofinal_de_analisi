@@ -1,0 +1,170 @@
+<main>
+  <!-- NAVBAR -->
+  <nav class="navbar is-white has-shadow">
+    <!-- logo / brand -->
+    <div class="navbar-brand">
+      <a class="navbar-item">
+        <img src="favicon.ico" style="max-height: 70px" class="py-2 px-2" />
+      </a>
+      <a class="navbar-burger" id="navbarBurger">
+        <span></span>
+        <span></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu" id="navbarMenu">
+      <!-- right links -->
+      <div class="navbar-end">
+        <a class="navbar-item">21 de diciembre 2023</a>
+        <a *ngIf="matrices.length == 0" class="navbar-item" id="my-cart">Mis soluciones (0)</a>
+        <a *ngIf="matrices.length > 0" class="navbar-item" id="my-cart">Mis soluciones ({{matrices.length}})</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMBS -->
+  <div class="section pt-2 pb-0">
+    <nav class="breadcrumb has-arrow-separator">
+      <ul class="container">
+        <li><a class="has-text-grey" href="#">App SPA</a></li>
+        <li><a href="#">Resolver</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- INCIO -->
+  <section class="section">
+    <div class="container">
+      <div class="columns is-vcentered is-multiline has-text-justified">
+        <!-- Aplicación clases responsive -->
+        <!-- Botones para controlar el carrusel -->
+        <div class="column is-12">
+          <div class="box">
+            <div class="columns">
+              <div class="column is-6">
+                <div class="box">
+                  <h3 class="is-size-5 has-text-weight-bold">Partición asociada:</h3>
+                  <div class="box">
+                    <h4 class="is-size-6">Primer subsistema:</h4>
+                    <p>Tiempos: ({{ particion[0][0] }} | {{ particion[0][1] }})</p>
+                  </div>
+                  <div class="box">
+                    <h4 class="is-size-6">Segundo subsistema:</h4>
+                    <p>Tiempos: ({{ particion[1][0] }} | {{ particion[1][1] }})</p>
+                  </div>
+                </div>
+                <p class="is-size-5 has-text-weight-bold">Menor EMD encontrado: <span class="has-text-primary">{{ emdMinima }}</span></p>
+              </div>
+              <div class="column is-6">
+                <div class="box">
+                  <!-- Visualización de la tabla actual -->
+
+                  <div class="box">
+                    <table class="table is-fullwidth mt-4" *ngIf="matrices.length > 0">
+                      <tbody>
+                        <tr *ngFor="let row of matrices">
+                          <td *ngFor="let cell of row">
+                            {{ cell }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-multiline">
+        <!-- Carga de datos -->
+
+        <div class="column is-4">
+          <div class="box">
+            <h3 class="is-size-4 mb-4">Carga de datos</h3>
+            <p>Acá se puede cargar la matriz desde un archivo excel.</p>
+            <div class="file mt-4">
+              <label class="file-label">
+                <input class="file-input" type="file" name="file" id="inputGroupFile" required (change)="csvImport($event)" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vmd.ms-excel">
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Elegir archivo…
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selección Estado -->
+        <div class="column is-4">
+          <div class="box">
+            <h3 class="is-size-4 mb-4">Selección Estado</h3>
+            <p>Acá se selecciona un estado presente para hallar de la matriz de transición de estados para el estado original o particionado.</p>
+            <form class="file-label" >
+              <!-- <input formControlName="miCampo" class="input is-primary" type="text" placeholder="Primary input"> -->
+              <input [ngModel]="digit" (ngModelChange)="onDigitChange($event)" name="limit" class="input is-primary" type="text" placeholder="Primary input">
+
+            </form>
+            <!-- <div class="select is-fullwidth mt-4">
+            </div> -->
+          </div>
+        </div>
+
+        <!-- Solucionar Sistema -->
+        <div class="column is-4">
+          <div class="box">
+            <h3 class="is-size-4 mb-4">Solucionar Sistema</h3>
+            <p>Solucionar mediante programación dinámica y mostrar las matrices de transición de estados, la matriz de probabilidades de transición de estados y la matriz de probabilidades de transición de estados en un tiempo t.</p>
+            <button [disabled]="!archivo_enviado" class="button is-primary mt-4" (click)="calcularYDescargar()">Resolver Sistema</button>
+          </div>
+        </div>
+        <div class="columns pl-2">
+          <button class="button is-secondary file-label" (click)="previousTable()" [disabled]="currentTableIndex === 0">Anterior</button>
+          <button class="button is-secondary file-label" (click)="nextTable()" [disabled]="currentTableIndex === matrices.length - 1">Siguiente</button>
+        </div>
+        
+
+        <div class="column is-12">
+          <div class="box">
+            <div class="is-size-4 mb-4">
+               <!-- Visualización de la tabla actual -->
+                <!-- <div class="column is-4"> -->
+                  <div class="box">
+                    <table class="table is-fullwidth mt-4" *ngIf="matrices.length > 0">
+                      <tbody>
+                        <tr *ngFor="let row of matrices">
+                          <td *ngFor="let cell of row">
+                            {{ cell }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    
+                  <!-- </div> -->
+                </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer has-background-black">
+    <div class="content has-text-centered has-text-white">
+      <p><b>Diseño de algoritmos —— Saldarriaga Urrea Juan Carlos</b></p>
+    </div>
+  </footer>
+
+</main>
